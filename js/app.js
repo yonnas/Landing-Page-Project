@@ -69,8 +69,6 @@ sections.forEach(section => {
         section.scrollIntoView({behavior: "smooth"});
     });
 
-
-
     // append all elements to the navigation
     navMenu.appendChild(navMenuListItem);
 
@@ -87,36 +85,19 @@ window.addEventListener('scroll', (event) => {
       // Get pixel distance from top of viewport
       const topDistance = section.getBoundingClientRect().top;
       
-      
-  
       // If the distance between the section and the top is between 0-100px,
-      // add active class to section
       if (topDistance >= 0 && topDistance < 100) {
+        // add active class to section
         section.classList.add('your-active-class');
+        // add active class to nav menu list item
         document.getElementById(section.id + "a").classList.add("navactive"); 
         
-      // Otherwise, remove the class from the section
+      
       } else {
+        // Otherwise, remove the class from section
         section.classList.remove('your-active-class');
+        // Otherwise, remove the class from nav menu list item
         document.getElementById(section.id + "a").classList.remove("navactive"); 
       }
     });
-
-
-    // const navMenuListItems = document.querySelectorAll("li");
-
-    // navMenuListItems.forEach( li => {
-
-    // }
-
-
   });
-
-      
-    // navMenuListItem.addEventListener("click", function(event) {
-    //     event.preventDefault();
-    //     if (navMenuListItem.clicked == true) {
-    //         navMenuListItem.classList.add("navactive");
-    //     } if (navMenuListItem.clicked == true) {
-    //         navMenuListItem.classList.remove("navactive");
-    //     }
