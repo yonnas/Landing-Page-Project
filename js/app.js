@@ -31,15 +31,41 @@ const sections = document.querySelectorAll("section");
 
 /**
  * End Global Variables
- * Start Helper Functions
- * 
-*/
 
-/**
- * End Helper Functions
  * Begin Main Functions
  * 
 */
+
+// Create function to dynamically build the  
+// nav menu when a section is added to the page
+const navMenuBuilder = () => {
+
+  // looping over each section that's added to the document
+  sections.forEach(section => {
+
+    //Declare & create nav menu list item
+    const navMenuListItem = document.createElement("li");
+
+    //Add style class and corresponding section ID to list item element
+    navMenuListItem.classList.add("menu__link", section.getAttribute("id"));
+
+    // Ingest text content from section using data-nav attribute
+    navMenuListItem.textContent = section.getAttribute("data-nav");
+    
+    // Scroll to section after clicking on list item using scrollIntoView event
+    navMenuListItem.addEventListener("click", () => {
+      section.scrollIntoView({behavior: "smooth"});
+    });
+
+    // append all elements to the navigation
+    navMenu.appendChild(navMenuListItem);
+    
+  });
+
+};
+
+// invoke nav menu builder function
+navMenuBuilder();
 
 /**
  * End Main Functions
@@ -47,57 +73,48 @@ const sections = document.querySelectorAll("section");
  * 
 */
 
-// Dynamically build the nav menu when a section is added to the page
+// On window scroll event, listen/detect for section in viewport
+// and apply active classes to matching section and list item
+window.addEventListener('scroll', (event) => {
+  event.preventDefault();
 
-// looping over each section that's added to the document
-sections.forEach(section => {
+  // Create variable to retrieve all nav menu list items
+  const allNavMenuListItems =  document.querySelectorAll("nav ul li");
 
-    //Declare & create nav menu list item
-    const navMenuListItem = document.createElement("li");
+  // Create variable for current section ID as empty string
+  let currentSectionId = "";
 
-    //Add nav meny specific class to list item element
-    navMenuListItem.classList.add("menu__link");
+  // Looping over each section that appears in the viewport
+  sections.forEach(section => {
 
-    // Ingest text content from section using data-nav attribute
-    navMenuListItem.textContent = section.getAttribute("data-nav");
+    // Get pixel distance from top of viewport
+    const topDistance = section.getBoundingClientRect().top;
 
-    navMenuListItem.id = section.id + "a";
-    
-    // Scroll to section after clicking on list item using scrollIntoView event
-    navMenuListItem.addEventListener("click", function(event) {
-        event.preventDefault();
-        section.scrollIntoView({behavior: "smooth"});
-    });
+    // Create variable for top viewport calculation
+    const isItInViewport = topDistance >= 0 && topDistance < 100;
 
-    // append all elements to the navigation
-    navMenu.appendChild(navMenuListItem);
+    // If the distance between the section and the top is between 0-100px,
+    if (isItInViewport) {
+      // add active class to section
+      section.classList.add('your-active-class');
+      // assign section ID from section that's in viewport
+      currentSectionId = section.getAttribute("id");
 
+    }  else {
+      // Otherwise, remove the active class from section
+      section.classList.remove('your-active-class');
+    }
+
+    // Looping over each nav menu list item to find matching section in the viewport
+    allNavMenuListItems.forEach((li) => {
+      // By default remove the active class from nav menu list item
+      li.classList.remove("navactive");
+      // If list item contains matching section ID to section in viewport
+      if (li.classList.contains(currentSectionId)) {
+      // add active class to nav menu list item
+        li.classList.add("navactive");
+      }
+    });  
+  });
 });
 
-
-// On window scroll
-window.addEventListener('scroll', (event) => {
-    event.preventDefault();
-  
-    // Looping over each section that appreas in the viewport
-    sections.forEach( section => {
-  
-      // Get pixel distance from top of viewport
-      const topDistance = section.getBoundingClientRect().top;
-      
-      // If the distance between the section and the top is between 0-100px,
-      if (topDistance >= 0 && topDistance < 100) {
-        // add active class to section
-        section.classList.add('your-active-class');
-        // add active class to nav menu list item
-        document.getElementById(section.id + "a").classList.add("navactive"); 
-        
-      
-      } else {
-        // Otherwise, remove the class from section
-        section.classList.remove('your-active-class');
-        // Otherwise, remove the class from nav menu list item
-        document.getElementById(section.id + "a").classList.remove("navactive"); 
-      }
-    });
-  });
